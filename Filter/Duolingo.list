@@ -1,0 +1,9 @@
+# > Duolingo
+USER-AGENT,DuolingoMobile*,DIRECT
+DOMAIN-SUFFIX,api2.duolingo.cn,DIRECT
+DOMAIN-SUFFIX,images-static.duolingo.cn,DIRECT
+DOMAIN,tts-static.duolingo.cn,DIRECT
+DOMAIN,duolingo-leaderboards-prod.duolingo.com,DIRECT
+DOMAIN,duolingo-achievements-prod.duolingo.com,DIRECT
+DOMAIN,excess.duolingo.com,DIRECT
+DOMAIN,stories.duolingo.com,DIRECT
