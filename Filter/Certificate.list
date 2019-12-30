@@ -1,1 +1,2 @@
 HOST,ocsp.apple.com,REJECT
+HOST,mesu.apple.com,REJECT
