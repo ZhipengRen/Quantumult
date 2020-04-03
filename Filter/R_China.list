@@ -1,5 +1,13 @@
-# > Duboku
-DOMAIN-SUFFIX,v.dajuku.com,DIRECT
-DOMAIN-SUFFIX,v.fanstui.com,DIRECT
-DOMAIN-SUFFIX,tv2.xboku.com,DIRECT
-DOMAIN-SUFFIX,www.duboku.tv,DIRECT
+# > Duolingo
+USER-AGENT,DuolingoMobile*,DIRECT
+DOMAIN-SUFFIX,api2.duolingo.cn,DIRECT
+DOMAIN-SUFFIX,images-static.duolingo.cn,DIRECT
+DOMAIN,tts-static.duolingo.cn,DIRECT
+DOMAIN,duolingo-leaderboards-prod.duolingo.com,DIRECT
+DOMAIN,duolingo-leaderboards-prod.duolingo.cn,DIRECT
+DOMAIN,duolingo-achievements-prod.duolingo.com,DIRECT
+DOMAIN,duolingo-achievements-prod.duolingo.cn,DIRECT
+DOMAIN,excess.duolingo.com,DIRECT
+DOMAIN,excess.duolingo.cn,DIRECT
+DOMAIN,stories.duolingo.com,DIRECT
+DOMAIN,stories.duolingo.cn,DIRECT
