@@ -11,3 +11,11 @@ DOMAIN,excess.duolingo.com,DIRECT
 DOMAIN,excess.duolingo.cn,DIRECT
 DOMAIN,stories.duolingo.com,DIRECT
 DOMAIN,stories.duolingo.cn,DIRECT
+
+# > Duboku
+DOMAIN-SUFFIX,v.dajuku.com,DIRECT
+DOMAIN-SUFFIX,v.fanstui.com,DIRECT
+DOMAIN-SUFFIX,tv2.xboku.com,DIRECT
+DOMAIN-SUFFIX,www.duboku.tv,DIRECT
+DOMAIN-SUFFIX,v.zdubo.com,DIRECT
+DOMAIN-SUFFIX,v.wedubo.com,DIRECT
