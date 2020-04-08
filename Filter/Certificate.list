@@ -4,6 +4,3 @@ HOST,gdmf.apple.com,REJECT
 
 # TF商店收据验证
 HOST,sandbox.itunes.apple.com,REJECT
-
-# Bahamut广告
-HOST,gamer2-cds.cdn.hinet.net,REJECT
