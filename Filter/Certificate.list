@@ -2,5 +2,5 @@ HOST,ocsp.apple.com,REJECT
 HOST,mesu.apple.com,REJECT
 HOST,gdmf.apple.com,REJECT
 
-# TF商店收录验证
+# TF商店收据验证
 HOST,sandbox.itunes.apple.com,REJECT
