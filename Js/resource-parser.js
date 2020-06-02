@@ -1,11 +1,11 @@
 /** 
-# Quantumult X 资源解析器 (2020-05-31: 12:59 )
+# Quantumult X 资源解析器 (2020-06-01: 23:59 )
 
 解析器作者: Shawn(请勿私聊问怎么用)
 有bug请反馈: @Shawn_KOP_bot
 更新请关注tg频道: https://t.me/QuanX_API
 
-主要功能: 将各类服务器订阅解析成 QuantumultX 格式引用(支持 V2RayN/SSR/SS/Trojan/QuanX(conf&list)/Surge(conf&list)格式)，并提供 1⃣️ 中的可选参数；
+主要功能: 将各类服务器订阅解析成 QuantumultX 格式引用(支持 V2RayN/SSR/SS/Trojan/QuanX(conf&list)/Surge(conf&list)/https(仅部分格式) 订阅)，并提供 1⃣️ 中的可选参数；
 
 附加功能: rewrite(重写) /filter(分流) 过滤, 可用于解决无法单独禁用远程引用中某(几)条 rewrite/hostname/filter, 以及直接导入 Surge 类型规则 list 的问题
 
@@ -17,7 +17,7 @@
 - in, out, 分别为 保留/排除, 多参数用 "+" 连接(逻辑"或"), 逻辑"与"请用"."连接，可直接用中文, 空格用"%20"代替 (如 "in=香港.IPLC.04+台湾&out=香港%20BGP" );
 - emoji=1,2 或 -1, 为添加/删除节点名中的 emoji 旗帜 (国行设备请用 emoji=2 );
 - udp=1, tfo=1 参数开启 udp-relay 及 fast-open (默认关闭, 此参数对源类型为 QuanX/Surge 的链接无效);
-- rename 重命名, rename=旧名@新名, 以及 "前缀@", "@后缀", 用 "+" 连接, 如 "rename=香港@HK+[SS]@+@[1X]";
+- rename 重命名, rename=旧名@新名, 以及 "前缀@", "@后缀","删除字符☠️" 用 "+" 连接, 如 "rename=香港@HK+[SS]@+@[1X]+倍率☠️";
 - cert=0，跳过证书验证(vmess/trojan)，即强制"tls-verification=false";
 - tls13=1, 开启 "tls13=true"(vmess/trojan), 请自行确认服务端是否支持;
 - sort=1 或 sort=-1, 排序参数，分别根据节点名 正序/逆序 排列;
@@ -87,7 +87,7 @@ if(Pinfo==1 && subinfo){
 		var day=epr.getDate()<10 ? "0"+(epr.getDate()):epr.getDate(); 
 		epr="过期时间: "+year+"-"+mth+"-"+day
 		} else{
-			epr="过期时间: ✈️ 未提供該信息" //没过期时间的显示订阅链接
+			epr=""; //"过期时间: ✈️ 未提供該信息" //没过期时间的显示订阅链接
 		}
 	var message=total+"\n"+usd+", "+left;
 	$notify("流量信息: "+subtag, epr, message)
@@ -397,10 +397,11 @@ function SubsEd2QX(subs,Pudp,Ptfo,Pcert,Ptls13){
 	var QuanXK=["shadowsocks=","trojan=","vmess=","http="];
 	var SurgeK=["=ss","=vmess","=trojan","=http","=custom"];
 	var QXlist=[];
-	var node=""
 	for(i=0;i<list0.length;i++){
+		var node=""
 		if(list0[i].trim().length>3){
 		var type=list0[i].split("://")[0].trim()
+		//$notify(type)
 		var listi=list0[i].replace(/ /g,"")
 		const QuanXCheck = (item) => listi.toLowerCase().indexOf(item)!=-1;
 		const SurgeCheck = (item) => listi.toLowerCase().indexOf(item)!=-1;
@@ -412,6 +413,8 @@ function SubsEd2QX(subs,Pudp,Ptfo,Pcert,Ptls13){
 			node = SS2QX(list0[i],Pudp,Ptfo)
 		}else if(type=="trojan"){
 			node = TJ2QX(list0[i],Pudp,Ptfo,Pcert,Ptls13)
+		}else if(type=="https"){ //subs,Ptfo,Pcert,Ptls13
+			node = HPS2QX(list0[i],Ptfo,Pcert,Ptls13)
 		}else if(QuanXK.some(QuanXCheck)){
 			node = list0[i]
 		}else if(SurgeK.some(SurgeCheck)){
@@ -427,12 +430,13 @@ function SubsEd2QX(subs,Pudp,Ptfo,Pcert,Ptls13){
 
 //混合订阅类型，用于未整体进行 base64 encode 的类型
 function Subs2QX(subs,Pudp,Ptfo,Pcert,Ptls13){ 
+	//$notify("start","cnt",subs)
 	var list0=subs.split("\n");
 	var QuanXK=["shadowsocks=","trojan=","vmess=","http="];
 	var SurgeK=["=ss","=vmess","=trojan","=http"];
 	var QXlist=[];
-	var node=""
 	for(i=0;i<list0.length;i++){
+		var node=""
 		if(list0[i].trim().length>3){
 		var type=list0[i].split("://")[0].trim()
 		var listi=list0[i].replace(/ /g,"")
@@ -446,6 +450,8 @@ function Subs2QX(subs,Pudp,Ptfo,Pcert,Ptls13){
 			node = SS2QX(list0[i],Pudp,Ptfo)
 		}else if(type=="trojan"){
 			node = TJ2QX(list0[i],Pudp,Ptfo,Pcert,Ptls13)
+		}else if(type=="https"){
+			node = HPS2QX(list0[i],Ptfo,Pcert,Ptls13)
 		}else if(QuanXK.some(QuanXCheck)){
 			node = list0[i]
 		}else if(SurgeK.some(SurgeCheck)){
@@ -488,7 +494,27 @@ function TagCheck_QX(content){
 		}
 	return Nlist
 }
-	
+//http=example.com:443, username=name, password=pwd, over-tls=true, tls-host=example.com, tls-verification=true, tls13=true, fast-open=false, udp-relay=false, tag=http-tls-02
+//HTTPS 类型 URI 转换成 QUANX 格式
+function HPS2QX(subs,Ptfo,Pcert,Ptls13){
+
+	var server=Base64.decode(subs.replace("https://","")).trim().split("\u0000")[0];
+	var nss=[]
+	if(server!=""){
+		var ipport="http="+server.split("@")[1].split("#")[0].split("/")[0];
+		var uname="username="+server.split(":")[0];
+		var pwd="password="+server.split("@")[0].split(":")[1];
+		var tag="tag="+server.split("#")[1];
+		var tls="over-tls=true";
+		var cert=Pcert!=0? "tls-verification=true":"tls-verification=false";
+		var tfo=Ptfo==1? "fast-open=true":"fast-open=false";
+		var tls13=Ptls13==1? "tls13=true":"tls13=false";
+		nss.push(ipport,uname,pwd,tls,cert,tfo,tls13,tag)
+	}
+	var QX=nss.join(",");
+	return QX
+	//$notify("ts","content",QX)
+}	
 
 //V2RayN uri转换成 QUANX 格式
 function V2QX(subs,Pudp,Ptfo,Pcert,Ptls13){
@@ -731,13 +757,16 @@ function Rename(str){
 //				while(name.indexOf(oname)!=-1){
 //					name=name.replace(oname,nname)
 //				}
-				}else if(oname){//前缀
+				}else if(oname && oname.indexOf("☠️")==-1){//前缀
 					var nemoji=emoji_del(name)
 						if(Pemoji==1 || Pemoji==2){
 						name=name.replace(name.split(" ")[0]+" ",name.split(" ")[0]+" "+oname)
 					}else { name=oname+name}
 				}else if(nname){//后缀
 					name=name+nname
+				}else if(oname && oname.indexOf("☠️")!=-1){ //删除特定字符
+					var del=new RegExp("\\"+oname.split("☠️")[0],"gm");
+					name=name.replace(del,"")
 				}else(name=name)	
 			nserver=hd+"tag="+name
 		}
