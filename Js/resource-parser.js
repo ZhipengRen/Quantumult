@@ -1,5 +1,5 @@
 /** 
-☑️ 资源解析器 ©𝐒𝐡𝐚𝐰𝐧  ⟦2020-06-20 15:59⟧
+☑️ 资源解析器 ©𝐒𝐡𝐚𝐰𝐧  ⟦2020-06-21 13:59⟧
 ----------------------------------------------------------
 🚫 发现 𝐁𝐔𝐆 请反馈: @Shawn_KOP_bot
 ⛳️ 关注 🆃🅶 相关频道: https://t.me/QuanX_API
@@ -34,6 +34,7 @@ B. rewrite(重写) /filter(分流) 的转换&筛选
 
 2⃣️ ⟦rewrite 重写⟧/⟦filter 分流⟧ ➠ 参数说明:
 ⦿ in, out, 根据关键词 保留/禁用 相关的规则、重写;
+⦿ inhn, outhn, 根据关键词 保留/删除 相关的主机名(hostname);
 ⦿ 分流规则另有 "policy=xxx" 参数, 可用于直接指定策略组，或为 Surge 类型 rule-set 生成策略组(默认"Shawn"策略组);
 ⦿ 示范: 禁用某重写引用中的 "淘宝比价 js" 以及 "weibo 的 js"
 ⚠️ ☞  https://myrewrite.list#out=tb_price.js+wb_ad.js
@@ -62,23 +63,31 @@ var link0=$resource.link;
 var para=(link0.indexOf("http")!=-1 && link0.indexOf("://")!=-1)? link0:link0+content0.split("\n")[0];
 var mark0=para.indexOf("#")!=-1? true:false;
 var type0=Type_Check(content0);
-//$notify(link0,"type",para)
 para1=para.slice(para.indexOf("#")+1) //防止参数中其它位置也存在"#"
 var Pin0=mark0 && para1.indexOf("in=")!=-1? (para1.split("in=")[1].split("&")[0].split("+")).map(decodeURIComponent):null;
 var Pout0=mark0 && para1.indexOf("out=")!=-1? (para1.split("out=")[1].split("&")[0].split("+")).map(decodeURIComponent):null;
+//$notify(link0,"type0",para)
+var Phin0=mark0 && para1.indexOf("inhn=")!=-1? (para1.split("inhn=")[1].split("&")[0].split("+")).map(decodeURIComponent):null; //hostname 
+var Phout0=mark0 && para1.indexOf("outhn=")!=-1? (para1.split("outhn=")[1].split("&")[0].split("+")).map(decodeURIComponent):null; //hostname
+//$notify(link0,"type1",para)
 var Pemoji=mark0 && para1.indexOf("emoji=")!=-1? para1.split("emoji=")[1].split("&")[0]:null;
 var Pudp0=mark0 && para1.indexOf("udp=")!=-1? para1.split("udp=")[1].split("&")[0]:0;
 var Ptfo0=mark0 && para1.indexOf("tfo=")!=-1? para1.split("tfo=")[1].split("&")[0]:0;
 var Pinfo=mark0 && para1.indexOf("info=")!=-1? para1.split("info=")[1].split("&")[0]:0;
 var Prname=mark0 && para1.indexOf("rename=")!=-1? para1.split("rename=")[1].split("&")[0].split("+"):null;
 var Prrname=mark0 && para1.indexOf("rrname=")!=-1? para1.split("rrname=")[1].split("&")[0].split("+"):null;
-var Ppolicy=mark0 && para1.indexOf("policy=")!=-1? para1.split("policy=")[1].split("&")[0]:"Shawn";
+var Ppolicy=mark0 && para1.indexOf("policy=")!=-1? decodeURIComponent(para1.split("policy=")[1].split("&")[0]):"Shawn";
 var Pcert0=mark0 && para1.indexOf("cert=")!=-1? para1.split("cert=")[1].split("&")[0]:1;
 var Psort0=mark0 && para1.indexOf("sort=")!=-1? para1.split("sort=")[1].split("&")[0]:0;
 var PTls13=mark0 && para1.indexOf("tls13=")!=-1? para1.split("tls13=")[1].split("&")[0]:0;
 var Pntf0= mark0 && para1.indexOf("ntf=")!=-1? para1.split("ntf=")[1].split("&")[0]:0;
 var Pb64= mark0 && para1.indexOf("b64=")!=-1? para1.split("b64=")[1].split("&")[0]:0;
 var emojino=[" 0️⃣ "," 1⃣️ "," 2⃣️ "," 3⃣️ "," 4⃣️ "," 5⃣️ "," 6⃣️ "," 7⃣️ "," 8⃣️ "," 9⃣️ "," 🔟 "]
+var pfi=Pin0? "in="+Pin0+", ":""
+var pfo=Pout0? "out="+Pout0:""
+var pfihn=Phin0? "inhn="+Phin0+", ":""
+var pfohn=Phout0? "outhn="+Phout0:""
+
 const subinfo=$resource.info;
 const subtag=$resource.tag!=undefined? $resource.tag:"";
 const Base64=new Base64Code();
@@ -88,6 +97,7 @@ var subinfo_link = {"open-url": "https://t.me/QuanX_API", "media-url" :"https://
 var rwrite_link = {"open-url":link0, "media-url": "https://shrtm.nu/G2Xn"}
 var rule_link={"open-url":link0, "media-url": "https://shrtm.nu/7eiK"}
 var nan_link={"open-url":link0, "media-url": qxpng}
+var sub_link={"open-url":link0, "media-url": "https://shrtm.nu/ebAr"}
 
 
 //$notify(link0,type0,content0)
@@ -147,27 +157,25 @@ if(flag==3){
 	$done({content:total.join("\n")});
 }else if(flag==1){
 	if(Pin0||Pout0){
-		if(Pntf0!=0){
-		$notify("👥 引用"+"⟦"+subtag+"⟧"+" 开始节点筛选","🐶 您已添加节点筛选参数，如下","👍️ 保留的关键字: "+Pin0+"\n👎️ 排除的关键字: "+Pout0);}
 		total=Filter(total,Pin0,Pout0)
 		} else {
 			if(Pntf0!=0){
-		$notify("👥 引用"+"⟦"+subtag+"⟧"+" 开始转换节点订阅","🐼️ 如需筛选节点请使用in/out及其他参数，可参考此示范:","👉 https://t.me/QuanXNews/110");}
+		$notify("👥 引用"+"⟦"+subtag+"⟧"+" 开始转换节点订阅","🐼️ 如需筛选节点请使用in/out及其他参数，可参考此示范:","👉 https://t.me/QuanXNews/110",sub_link);}
 	}
 	if(Prrname){
 		if(Pntf0!=0){ 
-		$notify("👥 引用"+"⟦"+subtag+"⟧"+" 开始节点重命名","⚠️ 格式为 \"旧名@新名\",\"删除字段☠️\",及 \"前缀@\",\"@后缀\"","👉 当前添加参数为: "+Prrname);}
+		$notify("👥 引用"+"⟦"+subtag+"⟧"+" 开始节点重命名","⚠️ 格式为 \"旧名@新名\",\"删除字段☠️\",及 \"前缀@\",\"@后缀\"","👉 当前添加参数为: "+Prrname, sub_link);}
 		var Prn=Prrname;
 		total=total.map(Rename);
 	}
 	if(Pemoji){
 				if(Pntf0!=0){
-				$notify("👥 引用"+"⟦"+subtag+"⟧"+" 开始更改旗帜 emoji","⚠️ 清除emoji请用参数 -1, 国行设备添加emoji请使用参数 2","👉 当前添加参数为: emoji="+Pemoji)};
+				$notify("👥 引用"+"⟦"+subtag+"⟧"+" 开始更改旗帜 emoji","⚠️ 清除emoji请用参数 -1, 国行设备添加emoji请使用参数 2","👉 当前添加参数为: emoji="+Pemoji,sub_link)};
 				total=emoji_handle(total,Pemoji);
 			}
 	if(Prname){
 		if(Pntf0!=0){ 
-		$notify("👥 引用"+"⟦"+subtag+"⟧"+" 开始节点重命名","⚠️ 格式为 \"旧名@新名\",\"删除字段☠️\",及 \"前缀@\",\"@后缀\"","👉 当前添加参数为: "+Prname);}
+		$notify("👥 引用"+"⟦"+subtag+"⟧"+" 开始节点重命名","⚠️ 格式为 \"旧名@新名\",\"删除字段☠️\",及 \"前缀@\",\"@后缀\"","👉 当前添加参数为: "+Prname,sub_link);}
 		var Prn=Prname;
 		total=total.map(Rename);
 	}
@@ -249,11 +257,13 @@ function Rewrite_Filter(subs,Pin,Pout){
 			continue;
 		}else if(hnc==0 && subii.indexOf("hostname=")==0){ //host name 部分
 			//console.log("hostname");
-			hostname=HostNamecheck(subi,Pin,Pout);
+			hostname=(Phin0||Phout0)? HostNamecheck(subi,Phin0,Phout0):subi;//hostname 部分
 		}else if(subii.indexOf("hostname=")!=0){ //rewrite 部分
 		var inflag=Rcheck(subi,Pin);
+		//if(inflag==1){$notify(inflag)}
 		var outflag=Rcheck(subi,Pout);
-		if(outflag==1){
+		if(outflag==1 || inflag==0){
+			//$notify("a","b",subi)
 			dwrite.push(subi); //out 命中
 		}else if(outflag==0 && inflag!=0){ //out 未命中 && in 未排除
 			Nlist.push(subi);
@@ -265,9 +275,9 @@ function Rewrite_Filter(subs,Pin,Pout){
 	}
 	if(dwrite.length>0){
 		nowrite=dwrite.length<=10?emojino[dwrite.length]:dwrite.length
-		$notify("🤖 "+"重写引用  ➟ "+"⟦"+subtag+"⟧","⛔️ 禁用: "+Pout0.join(", "),"☠️ 重写 rewrite 中已禁用以下"+nowrite+"个匹配项:"+"\n ⨷ "+dwrite.join("\n ⨷ "),rwrite_link )
+		$notify("🤖 "+"重写引用  ➟ "+"⟦"+subtag+"⟧","⛔️ 筛选参数: "+pfi+pfo,"☠️ 重写 rewrite 中已禁用以下"+nowrite+"个匹配项:"+"\n ⨷ "+dwrite.join("\n ⨷ "),rwrite_link )
 	}
-	if(Nlist.length==0){$notify("🤖 "+"重写引用  ➟ "+"⟦"+subtag+"⟧","✅ 保留: "+Pin+",⛔️ 禁用: "+Pout,"⚠️ 筛选后剩余rewrite规则数为 0️⃣ 条, 请检查参数及原始链接",nan_link)}
+	if(Nlist.length==0){$notify("🤖 "+"重写引用  ➟ "+"⟦"+subtag+"⟧","⛔️ 筛选参数: "+pfi+pfo,"⚠️ 筛选后剩余rewrite规则数为 0️⃣ 条, 请检查参数及原始链接",nan_link)}
 	if(hostname!=""){Nlist.push(hostname)}
 	return Nlist
 }
@@ -280,31 +290,33 @@ function HostNamecheck(content,parain,paraout){
 	for(i=0;i<hname.length;i++){
 		dd=hname[i]
 		const excludehn = (item) => dd.indexOf(item)!=-1;
-		if(paraout && paraout!=""){
-		if(!paraout.some(excludehn)){ 
+		if(paraout && paraout!=""){ //存在 out 参数时
+		if(!paraout.some(excludehn)){ //out 未命中🎯️
 			if(parain && parain!=""){
-				if(parain.some(excludehn)){ //Pin
+				if(parain.some(excludehn)){ //Pin 命中🎯️
 					nname.push(hname[i])
-				}
-			}else{nname.push(hname[i])}			
-		}else{dname.push(hname[i])}
-	}else if(parain && parain!=""){
-		if(parain.some(excludehn)){ //Pin
+				} else{$notify("..xx")
+				dname.push(hname[i])} //Pin 未命中🎯️的记录
+			}else{nname.push(hname[i])}	//无in 参数		
+		}else{dname.push(hname[i])} //out 参数命中
+	}else if(parain && parain!=""){ //不存在 out，但有 in 参数时
+		if(parain.some(excludehn)){ //Pin 命中🎯️
 					nname.push(hname[i])
-				}
+				}else{dname.push(hname[i])}
 			}else {
 				nname.push(hname[i])
 			}
 	} //for j
 	hname="hostname="+nname.join(", ");
+	// $notify(hname,dname)
 	if(dname.length>0){
-		if(paraout && paraout!=""){
+		if(paraout || parain){
 			var noname=dname.length<=10?emojino[dname.length]:dname.length
-			$notify("🤖 "+"重写引用  ➟ "+"⟦"+subtag+"⟧","⛔️ 禁用: "+paraout,"☠️ 主机名 hostname 中已删除以下"+noname+"个匹配项:"+"\n ⨷ "+dname.join(","),rwrite_link )
+			$notify("🤖 "+"重写引用  ➟ "+"⟦"+subtag+"⟧","⛔️ 筛选参数: "+pfihn+pfohn,"☠️ 主机名 hostname 中已删除以下"+noname+"个匹配项:"+"\n ⨷ "+dname.join(","),rwrite_link )
 		}
 	}
 	if(nname.length==0){
-		$notify("🤖 "+"重写引用  ➟ "+"⟦"+subtag+"⟧","✅ 保留: "+parain+",⛔️ 禁用: "+paraout,"⚠️ 主机名 hostname 中剩余 0️⃣ 项, 请检查参数及原始链接",nan_link )
+		$notify("🤖 "+"重写引用  ➟ "+"⟦"+subtag+"⟧","⛔️ 筛选参数: "+pfihn+pfohn,"⚠️ 主机名 hostname 中剩余 0️⃣ 项, 请检查参数及原始链接",nan_link )
 	}
 	return hname
 }
@@ -635,11 +647,16 @@ function Scheck(content,param){
 //节点过滤，使用+连接多个关键词(逻辑"或"):in 为保留，out 为排除, "与"逻辑请用符号"."连接
 function Filter(servers,Pin,Pout){
 	var Nlist=[];
+	var Delist=[]
 	for(var i=0;i<servers.length;i++){
 		if(Scheck(servers[i],Pin)!=0 && Scheck(servers[i],Pout)!=1){
 			Nlist.push(servers[i])
-		}
+		}else{Delist.push(servers[i].replace(/ /g,"").split("tag=")[1])} //记录未被保留节点
 	}//for
+	if(Pntf0!=0 && Delist.length>=1){//通知部分
+	var no= Delist.length<=10? emojino[ Delist.length]:Delist.length ;
+	$notify("👥 引用"+"⟦"+subtag+"⟧"+" 开始节点筛选","🕹 筛选关键字: "+pfi+pfo, "☠️ 已删除以下 "+no+"个节点\n"+" ⨁ "+Delist.join(", "),sub_link);
+	}
 	return Nlist
 }
 
