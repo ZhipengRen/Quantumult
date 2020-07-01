@@ -1,6 +1,11 @@
+# Block iOS Update
+DOMAIN,mesu.apple.com,REJECT
+DOMAIN,gdmf.apple.com,REJECT
+DOMAIN,updates-http.cdn-apple.com,REJECT
+DOMAIN,xp.apple.com,REJECT
+
+# 防企业证书过期
 HOST,ocsp.apple.com,REJECT
-HOST,mesu.apple.com,REJECT
-HOST,gdmf.apple.com,REJECT
 
 # TF商店收据验证
 HOST,sandbox.itunes.apple.com,REJECT
