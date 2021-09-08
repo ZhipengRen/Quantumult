@@ -32,9 +32,7 @@
     <key>metadata</key>
     <dict>
      <key>bundle-identifier</key>
-     <string>com.aldb.ios.magic.199402</string>
-     <key>bundle-version</key>
-     <string>1</string>
+     <string>*</string>
      <key>kind</key>
      <string>software</string>
      <key>subtitle</key>
