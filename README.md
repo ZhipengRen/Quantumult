@@ -15,5 +15,4 @@
 	-  找到 __MitM__ 模块点击 __添加主机名__
 3. 配置好 MitM 证书并系统信任，打开 __MitM__ 开关；
 4. 打开Emby客户端，选择剧集，链接中显示如下即成功
-	# ![alt Emby Link](https://raw.githubusercontent.com/ZhipengRen/Quantumult/dev/ScreenShots/Emby%20Link.jpeg)
 	<img src="https://raw.githubusercontent.com/ZhipengRen/Quantumult/dev/ScreenShots/Emby%20Link.jpeg" alt="Emby Link" width="300"/>
