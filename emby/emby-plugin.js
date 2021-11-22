@@ -70,6 +70,6 @@ if(requestURL.indexOf(emby) != -1){
 		headers: modifiedHeaders
 	});
 }else {
-	$done();
+	$done({});
 }
 
