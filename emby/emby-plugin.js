@@ -36,19 +36,26 @@ if(requestURL.indexOf(emby) != -1){
 	let vlcPlay = []
 
 	obj.MediaSources.forEach((item, index) => {
+		let Name = ''
+		item['MediaStreams'].forEach((t, i) => {
+			if(t['Type'] === 'Video'){
+				Name = t['DisplayTitle']
+			}
+		})
+
 		infusePlay.push({
 			Url: 'https://app.bilibili.com/empy/plugin/infuse://x-callback-url/play?url='+ encodeURIComponent(host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token']),
-			Name: 'Infuse - '+ item.Name
+			Name: 'Infuse - '+ Name
 		})
 
 		nplayerPlay.push({
 			Url: 'https://app.bilibili.com/empy/plugin/nplayer-'+ host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token'],
-			Name: 'nPlayer - '+ item.Name
+			Name: 'nPlayer - '+ Name
 		})
 
 		vlcPlay.push({
 			Url: 'https://app.bilibili.com/empy/plugin/vlc-x-callback://x-callback-url/stream?url='+ encodeURIComponent(host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token']),
-			Name: 'VLC - '+ item.Name
+			Name: 'VLC - '+ Name
 		})
 	})
 
