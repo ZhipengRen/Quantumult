@@ -1,5 +1,5 @@
 /**
- * @description [emby调用第三方播放器播放 支持：Infuse、nPlayer、VLC]
+ * @description [emby调用第三方播放器播放 支持：Infuse、nPlayer、VLC 、IINA、Movist Pro]
  */
 
 let requestURL = $request.url;
@@ -34,6 +34,8 @@ if(requestURL.indexOf(emby) != -1){
 	let infusePlay = []
 	let nplayerPlay = []
 	let vlcPlay = []
+        let iinaPlay = []
+        let movistproPlay = []
 
 	obj.MediaSources.forEach((item, index) => {
 		let Name = ''
@@ -57,9 +59,23 @@ if(requestURL.indexOf(emby) != -1){
 			Url: 'https://app.bilibili.com/empy/plugin/vlc-x-callback://x-callback-url/stream?url='+ encodeURIComponent(host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token']),
 			Name: 'VLC - '+ Name
 		})
+
+                iinaPlay.push({
+			Url: 'https://app.bilibili.com/empy/plugin/iina://weblink?url='+ encodeURIComponent(host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token']),
+			Name: 'IINA - '+ Name
+		})
+
+                let movistproInfo = {
+                        "url": host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token'],
+                        "title": obj.Name
+                }
+                movistproPlay.push({
+			Url: 'https://app.bilibili.com/empy/plugin/movistpro:'+ encodeURIComponent(JSON.stringify(movistproInfo)),
+			Name: 'Movist Pro - '+ Name
+		})
 	})
 
-	obj.ExternalUrls = [...obj.ExternalUrls, ...infusePlay, ...nplayerPlay, ...vlcPlay]
+	obj.ExternalUrls = [...obj.ExternalUrls, ...infusePlay, ...nplayerPlay, ...vlcPlay, ...iinaPlay, ...movistproPlay]
 
 	$done({
 		body: JSON.stringify(obj)
