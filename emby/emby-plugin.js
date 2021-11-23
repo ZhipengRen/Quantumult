@@ -65,10 +65,22 @@ if(requestURL.indexOf(emby) != -1){
 
 	let modifiedStatus = 'HTTP/1.1 302 Found';
 
-	$done({
+	let isSurge = typeof $httpClient != "undefined"
+
+	let data = {
 		status: modifiedStatus,
 		headers: modifiedHeaders
-	});
+	}
+
+	if(isSurge){
+		data = {
+			status: 302, 
+			headers: { Location: LocationURL }, 
+			body: ""
+		}
+	}
+
+	$done(data);
 }else {
 	$done({});
 }
