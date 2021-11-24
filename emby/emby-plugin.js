@@ -34,48 +34,76 @@ if(requestURL.indexOf(emby) != -1){
 	let infusePlay = []
 	let nplayerPlay = []
 	let vlcPlay = []
-        let iinaPlay = []
-        let movistproPlay = []
+	let iinaPlay = []
+	let movistproPlay = []
+	let shuDownload = []
 
 	obj.MediaSources.forEach((item, index) => {
+		let videoUrl = host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token']
+		let fileName = (obj.SeriesName ? obj.SeriesName+ '-' : '') + (obj.SeasonName ? obj.SeasonName+ '-' : '') + (obj.IndexNumber ? obj.IndexNumber+ '-' : '') + obj.Name
+		let shuInfo = [{
+			'header': {
+				'User-Agent': 'Download',
+			},
+			'url': videoUrl +'&filename='+ encodeURI(fileName + '.' + item['Container']),
+			'name': fileName + '.' + item['Container'],
+			'suspend': false,
+		}]
+
 		let Name = ''
 		item['MediaStreams'].forEach((t, i) => {
 			if(t['Type'] === 'Video'){
 				Name = t['DisplayTitle']
 			}
+
+			if(t['Type'] === 'Subtitle'){
+				shuInfo.push({
+					'header': {
+						'User-Agent': 'Download',
+					},
+					'url': host + '/Videos/'+ obj.Id +'/' + item.Id + '/Subtitles/' + t['Index'] + '/Stream.' + t['Codec'] + '?api_key=' + query['X-Emby-Token'],
+					'name': fileName,
+					'suspend': false,
+				})
+			}
 		})
 
 		infusePlay.push({
-			Url: 'https://app.bilibili.com/empy/plugin/infuse://x-callback-url/play?url='+ encodeURIComponent(host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token']),
+			Url: 'https://app.bilibili.com/empy/plugin/infuse://x-callback-url/play?url='+ encodeURIComponent(videoUrl),
 			Name: 'Infuse - '+ Name
 		})
 
 		nplayerPlay.push({
-			Url: 'https://app.bilibili.com/empy/plugin/nplayer-'+ host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token'],
+			Url: 'https://app.bilibili.com/empy/plugin/nplayer-'+ videoUrl,
 			Name: 'nPlayer - '+ Name
 		})
 
 		vlcPlay.push({
-			Url: 'https://app.bilibili.com/empy/plugin/vlc-x-callback://x-callback-url/stream?url='+ encodeURIComponent(host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token']),
+			Url: 'https://app.bilibili.com/empy/plugin/vlc-x-callback://x-callback-url/stream?url='+ encodeURIComponent(videoUrl),
 			Name: 'VLC - '+ Name
 		})
 
                 iinaPlay.push({
-			Url: 'https://app.bilibili.com/empy/plugin/iina://weblink?url='+ encodeURIComponent(host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token']),
+			Url: 'https://app.bilibili.com/empy/plugin/iina://weblink?url='+ encodeURIComponent(videoUrl),
 			Name: 'IINA - '+ Name
 		})
 
-                let movistproInfo = {
-                        "url": host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token'],
-                        "title": obj.Name
-                }
-                movistproPlay.push({
-			Url: 'https://app.bilibili.com/empy/plugin/movistpro:'+ encodeURIComponent(JSON.stringify(movistproInfo)),
-			Name: 'Movist Pro - '+ Name
+		let movistproInfo = {
+			"url": videoUrl,
+			"title": fileName
+		}
+		movistproPlay.push({
+			Url: 'https://app.bilibili.com/empy/plugin/movistpro:' + encodeURIComponent(JSON.stringify(movistproInfo)),
+			Name: 'Movist Pro - ' + Name
+		})
+
+		shuDownload.push({
+			Url: 'https://app.bilibili.com/empy/plugin/shu://gui.download.http?urls='+ encodeURIComponent(JSON.stringify(shuInfo)),
+			Name: 'Shu - '+ Name
 		})
 	})
 
-	obj.ExternalUrls = [...obj.ExternalUrls, ...infusePlay, ...nplayerPlay, ...vlcPlay, ...iinaPlay, ...movistproPlay]
+	obj.ExternalUrls = [...obj.ExternalUrls, ...infusePlay, ...nplayerPlay, ...vlcPlay, ...iinaPlay, ...movistproPlay, ...shuDownload]
 
 	$done({
 		body: JSON.stringify(obj)
