@@ -83,7 +83,7 @@ if(requestURL.indexOf(emby) != -1){
 			Name: 'VLC - '+ Name
 		})
 
-                iinaPlay.push({
+        iinaPlay.push({
 			Url: 'https://app.bilibili.com/empy/plugin/iina://weblink?url='+ encodeURIComponent(videoUrl),
 			Name: 'IINA - '+ Name
 		})
