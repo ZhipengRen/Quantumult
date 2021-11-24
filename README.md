@@ -27,4 +27,4 @@
 
 ## 特别感谢
 
-- 此拓展诸多多方法来源于 [@rartv](https://github.com/rartv/EmbyPublic/tree/test) 在此表示感谢
+- 此拓展诸多方法来源于 [@rartv](https://github.com/rartv/EmbyPublic/tree/test) 在此表示感谢
