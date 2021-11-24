@@ -56,7 +56,7 @@ if(requestURL.indexOf(emby) != -1){
 				Name = t['DisplayTitle']
 			}
 
-			if(t['Type'] === 'Subtitle'){
+			if(t['Type'] === 'Subtitle' && !t['IsTextSubtitleStream']){
 				shuInfo.push({
 					'header': {
 						'User-Agent': 'Download',
