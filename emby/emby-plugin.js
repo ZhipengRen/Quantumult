@@ -42,6 +42,10 @@ if(requestURL.indexOf(emby) != -1){
 		obj.MediaSources.forEach((item, index) => {
 			let videoUrl = host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token']
 			let fileName = (obj.SeriesName ? obj.SeriesName+ '-' : '') + (obj.SeasonName ? obj.SeasonName+ '-' : '') + (obj.IndexNumber ? obj.IndexNumber+ '-' : '') + obj.Name
+			
+			let vlcSubtitleInfo = []
+			let vlcSubtitle = ''	
+
 			let shuInfo = [{
 				'header': {
 					'User-Agent': 'Download',
@@ -58,16 +62,27 @@ if(requestURL.indexOf(emby) != -1){
 				}
 
 				if(t['Type'] === 'Subtitle' && t['IsExternal'] && t['Path']){
+					let language = t['DisplayTitle'].toLowerCase()
+					let subUrl = host + '/Videos/'+ obj.Id +'/' + item.Id + '/Subtitles/' + t['Index'] + '/Stream.' + t['Codec'] + '?api_key=' + query['X-Emby-Token']
+
+					if(language.indexOf('chinese') != -1 || language.indexOf('und') != -1 || language.indexOf('chi') != -1){
+						vlcSubtitleInfo.push(subUrl)
+					}
+
 					shuInfo.push({
 						'header': {
 							'User-Agent': 'Download',
 						},
-						'url': host + '/Videos/'+ obj.Id +'/' + item.Id + '/Subtitles/' + t['Index'] + '/Stream.' + t['Codec'] + '?api_key=' + query['X-Emby-Token'],
+						'url': subUrl,
 						'name': fileName,
 						'suspend': false,
 					})
 				}
 			})
+
+			if(vlcSubtitleInfo.length > 0){
+				vlcSubtitle = '&sub=' + encodeURIComponent(vlcSubtitleInfo[0])
+			}
 
 			infusePlay.push({
 				Url: host + '/emby/plugin/scheme/infuse://x-callback-url/play?url='+ encodeURIComponent(videoUrl),
@@ -80,7 +95,7 @@ if(requestURL.indexOf(emby) != -1){
 			})
 
 			vlcPlay.push({
-				Url: host + '/emby/plugin/scheme/vlc-x-callback://x-callback-url/stream?url='+ encodeURIComponent(videoUrl),
+				Url: host + '/emby/plugin/scheme/vlc-x-callback://x-callback-url/stream?url='+ encodeURIComponent(videoUrl) + vlcSubtitle,
 				Name: 'VLC - '+ Name
 			})
 
