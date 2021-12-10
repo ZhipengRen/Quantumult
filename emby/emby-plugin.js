@@ -111,29 +111,20 @@ if(requestURL.indexOf(emby) != -1){
 		body: JSON.stringify(obj)
 	});
 }else if(requestURL.indexOf(embyPlguin) != -1){
-	let modifiedHeaders = $response.headers;
-	let LocationURL = requestURL.split('emby/plugin/scheme/')[1]
-
-	modifiedHeaders['Location'] = LocationURL;
-
-	let modifiedStatus = 'HTTP/1.1 302 Found';
-
 	let isSurge = typeof $httpClient != "undefined"
 
-	let data = {
-		status: modifiedStatus,
-		headers: modifiedHeaders
-	}
-
+	let LocationURL = requestURL.split('emby/plugin/scheme/')[1]
+	let modifiedStatus = 'HTTP/1.1 302 Found';
+	
 	if(isSurge){
-		data = {
-			status: 302, 
-			headers: { Location: LocationURL }, 
-			body: ""
-		}
+		modifiedStatus = 302
 	}
 
-	$done(data);
+	$done({
+		status: modifiedStatus, 
+		headers: { Location: LocationURL }, 
+		body: ""
+	});
 }else {
 	$done({});
 }
