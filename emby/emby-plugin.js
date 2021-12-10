@@ -4,7 +4,7 @@
 
 let requestURL = $request.url;
 let emby = '/emby/Users';
-let embyPlguin = '/empy/plugin';
+let embyPlguin = '/emby/plugin';
 
 if(requestURL.indexOf(emby) != -1){
 	function getHost(url) {
@@ -70,22 +70,22 @@ if(requestURL.indexOf(emby) != -1){
 			})
 
 			infusePlay.push({
-				Url: host + '/empy/plugin/infuse://x-callback-url/play?url='+ encodeURIComponent(videoUrl),
+				Url: host + '/emby/plugin/scheme/infuse://x-callback-url/play?url='+ encodeURIComponent(videoUrl),
 				Name: 'Infuse - '+ Name
 			})
 
 			nplayerPlay.push({
-				Url: host + '/empy/plugin/nplayer-'+ videoUrl,
+				Url: host + '/emby/plugin/scheme/nplayer-'+ videoUrl,
 				Name: 'nPlayer - '+ Name
 			})
 
 			vlcPlay.push({
-				Url: host + '/empy/plugin/vlc-x-callback://x-callback-url/stream?url='+ encodeURIComponent(videoUrl),
+				Url: host + '/emby/plugin/scheme/vlc-x-callback://x-callback-url/stream?url='+ encodeURIComponent(videoUrl),
 				Name: 'VLC - '+ Name
 			})
 
 	        iinaPlay.push({
-				Url: host + '/empy/plugin/iina://weblink?url='+ encodeURIComponent(videoUrl),
+				Url: host + '/emby/plugin/scheme/iina://weblink?url='+ encodeURIComponent(videoUrl),
 				Name: 'IINA - '+ Name
 			})
 
@@ -94,12 +94,12 @@ if(requestURL.indexOf(emby) != -1){
 				"title": fileName
 			}
 			movistproPlay.push({
-				Url: host + '/empy/plugin/movistpro:' + encodeURIComponent(JSON.stringify(movistproInfo)),
+				Url: host + '/emby/plugin/scheme/movistpro:' + encodeURIComponent(JSON.stringify(movistproInfo)),
 				Name: 'Movist Pro - ' + Name
 			})
 
 			shuDownload.push({
-				Url: host + '/empy/plugin/shu://gui.download.http?urls='+ encodeURIComponent(JSON.stringify(shuInfo)),
+				Url: host + '/emby/plugin/scheme/shu://gui.download.http?urls='+ encodeURIComponent(JSON.stringify(shuInfo)),
 				Name: 'Shu - '+ Name
 			})
 		})
