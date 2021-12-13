@@ -42,7 +42,7 @@ if(requestURL.indexOf(emby) != -1){
 		obj.MediaSources.forEach((item, index) => {
 			let originalVideoUrl = host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token']
 			let originalFileName = (obj.SeriesName ? obj.SeriesName+ '-' : '') + (obj.SeasonName ? obj.SeasonName+ '-' : '') + (obj.IndexNumber ? obj.IndexNumber+ '-' : '') + obj.Name
-			let fileName = item['Path'].substring(item['Path'].lastIndexOf('/') + 1);
+			let fileName = item['Path'] ? item['Path'].substring(item['Path'].lastIndexOf('/') + 1) : originalFileName;
             let videoUrl = host + '/Videos/' + obj.Id + '/stream/' + encodeURIComponent(fileName) + '?MediaSourceId=' + item.Id + '&Static=true&api_key=' + query['X-Emby-Token'] + '&filename=' + encodeURIComponent(fileName);
 
 			let vlcSubtitleInfo = []
