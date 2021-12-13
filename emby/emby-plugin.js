@@ -6,25 +6,25 @@ let requestURL = $request.url;
 let emby = '/emby/Users';
 let embyPlguin = '/emby/plugin';
 
+function getQueryVariable(url) {
+	let index = url.lastIndexOf('?');
+	let query = url.substring(index + 1, url.length);
+	let vars = query.split("&");
+	let querys = new Object();
+	for (let i = 0; i < vars.length; i++) {
+		let pair = vars[i].split("=");
+		querys[pair[0]] = pair[1]
+	}
+	if (Object.keys(querys).length == 0) {
+		return null;
+	} else {
+		return querys;
+	}
+}
+
 if(requestURL.indexOf(emby) != -1){
 	function getHost(url) {
 	  return url.toLowerCase().match(/^(https?:\/\/.*?)\//)[1];
-	}
-
-	function getQueryVariable(url) {
-		let index = url.lastIndexOf('?');
-		let query = url.substring(index + 1, url.length);
-		let vars = query.split("&");
-		let querys = new Object();
-		for (let i = 0; i < vars.length; i++) {
-			let pair = vars[i].split("=");
-			querys[pair[0]] = pair[1]
-		}
-		if (Object.keys(querys).length == 0) {
-			return null;
-		} else {
-			return querys;
-		}
 	}
 
 	let host = getHost(requestURL);
@@ -40,9 +40,11 @@ if(requestURL.indexOf(emby) != -1){
 
 	if(obj.MediaSources){
 		obj.MediaSources.forEach((item, index) => {
-			let videoUrl = host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token']
-			let fileName = (obj.SeriesName ? obj.SeriesName+ '-' : '') + (obj.SeasonName ? obj.SeasonName+ '-' : '') + (obj.IndexNumber ? obj.IndexNumber+ '-' : '') + obj.Name
-			
+			// let videoUrl = host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token']
+			// let fileName = (obj.SeriesName ? obj.SeriesName+ '-' : '') + (obj.SeasonName ? obj.SeasonName+ '-' : '') + (obj.IndexNumber ? obj.IndexNumber+ '-' : '') + obj.Name
+			let fileName = item['Path'].substring(item['Path'].lastIndexOf('/') + 1);
+            let videoUrl = host + '/Videos/' + obj.Id + '/stream/' + encodeURIComponent(fileName) + '?MediaSourceId=' + item.Id + '&Static=true&api_key=' + query['X-Emby-Token'] + '&filename=' + encodeURIComponent(fileName);
+
 			let vlcSubtitleInfo = []
 			let vlcSubtitle = ''	
 
@@ -140,6 +142,25 @@ if(requestURL.indexOf(emby) != -1){
 		headers: { Location: LocationURL }, 
 		body: ""
 	});
+}else if(requestURL.indexOf('/Videos/') != -1 && (requestURL.indexOf('/stream/') != -1 || requestURL.indexOf('/Subtitles/') != -1)) { // 资源路径伪静态
+    let query = getQueryVariable(requestURL);
+    if (typeof(query['filename']) == "undefined" || query['filename'] == "") {
+        $done({});
+    }
+    let isSurge = typeof $httpClient != "undefined";
+    if (isSurge) {
+        requestURL = $request.url.replace('/' + query['filename'], '');
+        $done({
+            url: requestURL,
+            headers: $request.headers
+        });
+    } else {
+        requestURL = $request.path.replace('/' + query['filename'], '');
+        $done({
+            path: requestURL,
+            headers: $request.headers
+        });
+    }
 }else {
 	$done({});
 }
