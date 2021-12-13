@@ -121,9 +121,9 @@ if(requestURL.indexOf(emby) != -1){
 			})
 		})
 	}
-	
+
 	obj.ExternalUrls = obj.ExternalUrls.filter((item) => {
-		return (item.Name.indexOf('Infuse') === -1 && item.Name.indexOf('nPlayer') === -1 && item.Name.indexOf('VLC') === -1 && item.Name.indexOf('Movist') === -1)
+		return (item.Name.indexOf('Infuse') === -1 && item.Name.indexOf('nPlayer') === -1 && item.Name.indexOf('VLC') === -1 && item.Name.indexOf('Movist') === -1 && item.Name.indexOf('PotPlayer') === -1)
 	})
 	obj.ExternalUrls = [...obj.ExternalUrls, ...infusePlay, ...nplayerPlay, ...vlcPlay, ...iinaPlay, ...movistproPlay, ...shuDownload]
 
