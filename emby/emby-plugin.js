@@ -40,8 +40,8 @@ if(requestURL.indexOf(emby) != -1){
 
 	if(obj.MediaSources){
 		obj.MediaSources.forEach((item, index) => {
-			// let videoUrl = host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token']
-			// let fileName = (obj.SeriesName ? obj.SeriesName+ '-' : '') + (obj.SeasonName ? obj.SeasonName+ '-' : '') + (obj.IndexNumber ? obj.IndexNumber+ '-' : '') + obj.Name
+			let originalVideoUrl = host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token']
+			let originalFileName = (obj.SeriesName ? obj.SeriesName+ '-' : '') + (obj.SeasonName ? obj.SeasonName+ '-' : '') + (obj.IndexNumber ? obj.IndexNumber+ '-' : '') + obj.Name
 			let fileName = item['Path'].substring(item['Path'].lastIndexOf('/') + 1);
             let videoUrl = host + '/Videos/' + obj.Id + '/stream/' + encodeURIComponent(fileName) + '?MediaSourceId=' + item.Id + '&Static=true&api_key=' + query['X-Emby-Token'] + '&filename=' + encodeURIComponent(fileName);
 
@@ -52,7 +52,7 @@ if(requestURL.indexOf(emby) != -1){
 				'header': {
 					'User-Agent': 'Download',
 				},
-				'url': videoUrl +'&filename='+ encodeURI(fileName + '.' + item['Container']),
+				'url': originalVideoUrl +'&filename='+ encodeURI(originalFileName + '.' + item['Container']),
 				'name': fileName + '.' + item['Container'],
 				'suspend': false,
 			}]
@@ -76,7 +76,7 @@ if(requestURL.indexOf(emby) != -1){
 							'User-Agent': 'Download',
 						},
 						'url': subUrl,
-						'name': fileName,
+						'name': originalFileName,
 						'suspend': false,
 					})
 				}
