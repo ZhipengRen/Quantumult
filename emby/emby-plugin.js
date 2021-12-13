@@ -53,7 +53,7 @@ if(requestURL.indexOf(emby) != -1){
 					'User-Agent': 'Download',
 				},
 				'url': originalVideoUrl +'&filename='+ encodeURI(originalFileName + '.' + item['Container']),
-				'name': fileName + '.' + item['Container'],
+				'name': originalFileName + '.' + item['Container'],
 				'suspend': false,
 			}]
 
