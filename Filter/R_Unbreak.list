@@ -1,8 +1,3 @@
-# > Duolingo
-USER-AGENT,DuolingoMobile*,DIRECT
-HOST-SUFFIX,duolingo.cn,DIRECT
-HOST-SUFFIX,duolingo.com,DIRECT
-
 # > 大师兄影视
 USER-AGENT,大师兄便签*,DIRECT
 HOST,hou.lu,DIRECT
