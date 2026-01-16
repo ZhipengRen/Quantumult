@@ -167,7 +167,7 @@ if(requestURL.indexOf(emby) != -1){
             headers: $request.headers
         });
     }
-}else else if(requestURL.indexOf(embyShows) != -1){
+}else if(requestURL.indexOf(embyShows) != -1){
 	let obj = JSON.parse($response.body);
 	obj["Items"].forEach((item) => {
 		item.CanDownload = true
