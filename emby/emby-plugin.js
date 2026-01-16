@@ -5,6 +5,7 @@
 let requestURL = $request.url;
 let emby = '/emby/Users';
 let embyPlguin = '/emby/plugin';
+let embyShows = '/emby/Shows';
 
 function getQueryVariable(url) {
 	let index = url.lastIndexOf('?');
@@ -166,7 +167,16 @@ if(requestURL.indexOf(emby) != -1){
             headers: $request.headers
         });
     }
-}else {
+}else else if(requestURL.indexOf(embyShows) != -1){
+	let obj = JSON.parse($response.body);
+	obj["Items"].forEach((item) => {
+		item.CanDownload = true
+	})
+	
+	$done({
+		body: JSON.stringify(obj)
+	});
+} else {
 	$done({});
 }
 
