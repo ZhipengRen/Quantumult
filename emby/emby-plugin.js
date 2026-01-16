@@ -38,6 +38,8 @@ if(requestURL.indexOf(emby) != -1){
 	let movistproPlay = []
 	let shuDownload = []
 
+	obj.CanDownload = true
+	
 	if(obj.MediaSources){
 		obj.MediaSources.forEach((item, index) => {
 			let originalVideoUrl = host + '/videos/'+ obj.Id +'/stream.mp4?DeviceId='+ query['X-Emby-Device-Id'] +'&MediaSourceId='+ item.Id +'&Static=true&api_key='+ query['X-Emby-Token']
