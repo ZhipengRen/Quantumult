@@ -170,14 +170,14 @@ if(requestURL.indexOf(emby) != -1){
 }else if(requestURL.indexOf(embyShows) != -1){
 	let obj = JSON.parse($response.body);
 	console.log(obj);
-	obj["Items"].forEach((item) => {
-		item.CanDownload = true
-	})
+	// obj["Items"].forEach((item) => {
+	// 	item.CanDownload = true
+	// })
 	
 	$done({
 		body: JSON.stringify(obj)
 	});
-} else {
+}else {
 	$done({});
 }
 
