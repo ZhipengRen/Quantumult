@@ -4,7 +4,8 @@
 
 let requestURL = $request.url;
 
-let re = /plist\/(.*)\.plist$/;
+//let re = /plist\/(.*)\.plist$/;
+let re = /bundleIdentifier=(.*)/;
 let bundleIdentifier = re.exec(requestURL)[1]
 
 let html = `
