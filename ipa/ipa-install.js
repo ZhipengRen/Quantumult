@@ -38,9 +38,14 @@ let html = `
 	    </dict>
 	</plist>
 `
+let isSurge = typeof $httpClient != "undefined";
+let modifiedStatus = 'HTTP/1.1 200 OK';
+if(isSurge){
+	modifiedStatus = 200
+}
 
 $done({
-	status: 'HTTP/1.1 200 OK',
+	status: modifiedStatus,
 	headers: {},
 	body: html
 });
