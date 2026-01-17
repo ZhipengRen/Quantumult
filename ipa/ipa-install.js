@@ -3,10 +3,12 @@
  */
 
 let requestURL = $request.url;
+console.log(requestURL);
 
 //let re = /plist\/(.*)\.plist$/;
 let re = /bundleIdentifier=(.*)/;
 let bundleIdentifier = re.exec(requestURL)[1]
+console.log(bundleIdentifier);
 
 let html = `
 	<?xml version="1.0" encoding="UTF-8"?>
